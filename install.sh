@@ -45,6 +45,9 @@ install_tools () {
 	fi
 }
 
+# installing powerline fonts
+sudo apt-get install fonts-powerline
+
 init
 link
 install_tools
