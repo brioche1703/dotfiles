@@ -2,6 +2,11 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+#Switch to ZSH shell
+if test -t 1; then
+exec zsh
+fi
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -118,3 +123,4 @@ fi
 
 #set bell length to zero
 setterm -blength 0
+
