@@ -7,8 +7,9 @@ if test -t 1; then
 exec zsh
 fi
 
-# Use correct display
-export DISPLAY=localhost:0.0
+# set correct display for graphic application
+DISPLAY=:0.0
+export DISPLAY
 
 # If not running interactively, don't do anything
 case $- in
@@ -125,24 +126,4 @@ if ! shopt -oq posix; then
 fi
 
 # set bell length to zero
-setterm -blength 0
-
-# set correct display for graphic application
-DISPLAY=:0.0
-export DISPLAY
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/brioche/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/brioche/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/brioche/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/brioche/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-export PATH="/home/brioche/anaconda3/bin:$PATH"
+#setterm -blength 0
