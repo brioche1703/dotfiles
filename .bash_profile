@@ -49,3 +49,6 @@ chkload () { #gets the current 1m avg CPU load
     fi
     echo $CURRLOAD
 }
+
+# Use correct display
+export DISPLAY=localhost:0.0

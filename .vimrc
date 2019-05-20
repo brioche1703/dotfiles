@@ -102,6 +102,16 @@ inoremap kj <esc>
 let mapleader = "\<Space>"
 nnoremap <Leader>a :echo "GG there space"<CR>
 
+"Brackets gestions
+inoremap ( ()<Esc>i
+inoremap [ []<Esc>i
+inoremap { {}<Esc>i
+inoremap < <><Esc>i
+inoremap ' ''<Esc>i
+inoremap " ""<Esc>i
+inoremap <C-j> <Esc>/[)}"'\]>]<CR>:nohl<CR>a
+vnoremap _( <Esc>`>a)<Esc>`<i(<Esc>
+
 "Splitting  panes
 "vv to generate new vertical split
 nnoremap <silent> vv <C-w>v
@@ -139,7 +149,7 @@ colorscheme monokai
 
 "Python configuration
 "Execute python current file
-nnoremap <buffer> <F5> :exec '!python' shellescape(@%, 1)<cr>
+nnoremap <buffer> <F5> :exec '!python3' shellescape(@%, 1)<cr>
 
 "Indentation
 au BufNewFile,BufRead *.py
@@ -157,6 +167,8 @@ au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 
 "Highlighting
 let python_highlight_all=1
+"Highlighting search
+set hlsearch
 
 "Virtualenv support
 "python with virtualenv support
@@ -168,3 +180,4 @@ if 'VIRTUAL_ENV' in os.environ:
 	activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
 	execfile(activate_this, dict(__file__=activate_this))
 EOF
+
