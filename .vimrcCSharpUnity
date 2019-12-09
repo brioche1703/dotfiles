@@ -50,6 +50,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'OmniSharp/omnisharp-vim'
   " Ulti Snipet (Omnisharp dependencies)
   Plug 'SirVer/ultisnips'
+  " EasyMotion
+  Plug 'Lokaltog/vim-easymotion'
 
 call plug#end()
 
@@ -317,11 +319,6 @@ augroup omnisharp_commands
     " Find all code errors/warnings for the current solution and populate the quickfix window
     autocmd FileType cs nnoremap <buffer> <Leader>cc :OmniSharpGlobalCodeCheck<CR>
 augroup END
-
-" Contextual code actions (uses fzf, CtrlP or unite.vim when available)
-nnoremap <Leader><Space> :OmniSharpGetCodeActions<CR>
-" Run code actions with text selected in visual mode to extract method
-xnoremap <Leader><Space> :call OmniSharp#GetCodeActions('visual')<CR>
 
 " Rename with dialog
 nnoremap <Leader>nm :OmniSharpRename<CR>
