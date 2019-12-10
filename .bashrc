@@ -3,9 +3,9 @@
 # for examples
 
 #Switch to ZSH shell
-if test -t 1; then
-exec zsh
-fi
+#if test -t 1; then
+#exec zsh
+#fi
 
 # set correct display for graphic application
 DISPLAY=:0.0
@@ -127,3 +127,70 @@ fi
 
 # set bell length to zero
 #setterm -blength 0
+
+# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Tmux support
+alias tmux="TERM=xterm-256color tmux"
+
+# Bookmarking system
+# s <bookmark_name> - Saves the current directory as "bookmark_name"
+# g <bookmark_name> - Goes (cd) to the directory associated with "bookmark_name"
+# p <bookmark_name> - Prints the directory associated with "bookmark_name"
+# d <bookmark_name> - Deletes the bookmark
+# l                 - Lists all available bookmarks
+# mkdir temp && cd temp
+# git clone git://github.com/huyng/bashmarks.git
+# cd bashmarks
+# make install
+# echo "source ~/.local/bin/bashmarks.sh" >> ~/.bash_profile
+# source ~/.bash_profile
+
+# Prompt
+# get current branch in git repo
+function parse_git_branch() {
+	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+	if [ ! "${BRANCH}" == "" ]
+	then
+		STAT=`parse_git_dirty`
+		echo "[${BRANCH}${STAT}]"
+	else
+		echo ""
+	fi
+}
+
+# get current status of git repo
+function parse_git_dirty {
+	status=`git status 2>&1 | tee`
+	dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
+	untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
+	ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
+	newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
+	renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
+	deleted=`echo -n "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
+	bits=''
+	if [ "${renamed}" == "0" ]; then
+		bits=">${bits}"
+	fi
+	if [ "${ahead}" == "0" ]; then
+		bits="*${bits}"
+	fi
+	if [ "${newfile}" == "0" ]; then
+		bits="+${bits}"
+	fi
+	if [ "${untracked}" == "0" ]; then
+		bits="?${bits}"
+	fi
+	if [ "${deleted}" == "0" ]; then
+		bits="x${bits}"
+	fi
+	if [ "${dirty}" == "0" ]; then
+		bits="!${bits}"
+	fi
+	if [ ! "${bits}" == "" ]; then
+		echo " ${bits}"
+	else
+		echo ""
+	fi
+}
+
+export PS1="\[\033[01m\]\[\033[01;31m\]┌─ \u\[$(tput sgr0)\]\[\033[38;5;46m\] at \[$(tput sgr0)\]\[\033[38;5;13m\]\A\[$(tput sgr0)\]\[\033[38;5;15m\] \[$(tput sgr0)\]\[\033[38;5;6m\] in \033[01m\]\[\033[01;31m\]{\w}\\[\033[38;5;46m\]\`parse_git_branch\`\[$(tput sgr0)\]\[\033[38;5;15m\]\n\[$(tput sgr0)\]\[\033[01m\]\[\033[01;31m\]└─#\[$(tput sgr0)\]"
