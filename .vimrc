@@ -8,9 +8,12 @@ filetype plugin on
 " Plug settings.
 call plug#begin('~/.vim/plugged')
   " Themes
-  Plug 'kooparse/vim-color-desert-night'
-  " Simple status bar
-  Plug 'itchyny/lightline.vim'
+  "Plug 'kooparse/vim-color-desert-night'
+  Plug 'rafi/awesome-vim-colorschemes'
+  " Status bar
+  Plug 'vim-airline/vim-airline'
+  Plug 'vim-airline/vim-airline-themes'
+  "Plug 'itchyny/lightline.vim'
   " File directory manager
   Plug 'scrooloose/nerdtree'
   " Vim defaults
@@ -61,15 +64,15 @@ let g:polyglot_disabled = ['typescript']
 set termguicolors
 set background=dark
 " Contrast + Colorscheme
-colo desert-night
+colorscheme space-vim-dark
  
 " Colorize lightline + add relative path
-let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'relativepath', 'modified' ] ]
-      \ }
-      \ }
+"let g:lightline = {
+"      \ 'colorscheme': 'seoul256',
+"      \ 'active': {
+"      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'relativepath', 'modified' ] ]
+"      \ }
+"      \ }
 
 " Everybody do that
 set nocompatible
@@ -107,8 +110,8 @@ set smartcase
 " Global flag for search by default
 set gdefault
 " Format completeopt list
-set completeopt=noinsert,menuone,noselect
-set previewheight=10
+"set completeopt=noinsert,menuone,noselect
+"set previewheight=10
 " Always draw the signcolumn
 set signcolumn=yes
 " Open new vertical split to the right by default
@@ -133,45 +136,26 @@ inoremap kj <esc>
 " NerdTree
 map <C-n> :NERDTreeToggle<CR>
 
-let g:ale_linters = {
-      \ 'cs': ['OmniSharp'],
-      \ 'javascript': ['flow', 'eslint'],
-      \ 'typescript': ['tsserver'],
-      \ 'rust': ['rls'],
-      \ 'go': ['gometalinter']
-      \ }
+" Ale settings
+let g:ale_completion_enabled = 1
 
-let g:ale_fixers = {
-      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-      \ 'cs': ['uncrustify'],
-      \ 'rust': ['rustfmt'],
-      \ 'html': ['prettier'],
-      \ 'javascript': ['prettier'],
-      \ 'typescript': ['prettier'],
-      \ 'css': ['prettier'],
-      \ 'markdown': ['prettier'],
-      \ 'go': ['gofmt']
-      \ }
-
-" Javascript Ale rules
-let g:jsx_ext_required = 0
 " Ale bindings
 nmap <leader>q <Plug>(ale_fix)
 nmap <silent> gd :ALEGoToDefinition<CR>
 " Binding for moving through errors
-nmap <silent> <C-k> <Plug>(ale_previous_wrap)
-nmap <silent> <C-j> <Plug>(ale_next_wrap)
+"nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+"nmap <silent> <C-j> <Plug>(ale_next_wrap)
 
 " FZF configuration (with Rg)
-let $FZF_PREVIEW_COMMAND = 'bat --style=numbers --color=always --theme="1337" {}'
-let $FZF_DEFAULT_COMMAND= 'rg --files --hidden -g "!{.git/*}"'
-let g:fzf_layout = { 'down': '~20%' }
-let g:fzf_buffers_jump = 1
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --fixed-strings --color=always '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:40%'),
-  \   <bang>0)
+"let $FZF_PREVIEW_COMMAND = 'bat --style=numbers --color=always --theme="1337" {}'
+"let $FZF_DEFAULT_COMMAND= 'rg --files --hidden -g "!{.git/*}"'
+"let g:fzf_layout = { 'down': '~20%' }
+"let g:fzf_buffers_jump = 1
+"command! -bang -nargs=* Rg
+"  \ call fzf#vim#grep(
+"  \   'rg --column --line-number --no-heading --fixed-strings --color=always '.shellescape(<q-args>), 1,
+"  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'right:40%'),
+"  \   <bang>0)
 
 " Bind Fuzzy search cmd
 nmap <Leader>b :Buffers<CR>
@@ -185,13 +169,15 @@ nmap <leader>g <Plug>(FerretAck)
 " Mapping to replace the quickfix
 nmap <leader>r <Plug>(FerretAcks)
 
+" Set clipboard to unnamed to be able to copy and paste bwtween terminal and
+" vim session
+set clipboard^=unnamed
+
 " Copy & paste to system clipboard
 nmap <leader>p "+p
 vmap <leader>y "+y
 " open vimrc file
 nmap <leader>ev :e ~/.vimrc<CR>
-" Toggles between buffers
-nmap <leader><leader> <c-^>
 " Focus next pane
 nmap <leader>w <C-w><C-w>
 " Search current buffer siblings
@@ -209,7 +195,7 @@ nmap <leader>C :!cargo run<CR>
 " Better split navigation
 nmap <C-J> <C-W><C-J>
 nmap <C-K> <C-W><C-K>
-" nmap <C-L> <C-W><C-L>
+nmap <C-L> <C-W><C-L>
 nmap <C-H> <C-W><C-H>
 " Swap current line
 nmap ]e :m+<CR>
@@ -231,6 +217,7 @@ nmap <silent> g* g*zz
 "Splitting  panes
 "vv to generate new vertical split
 nnoremap <silent> vv <C-w>v
+nnoremap <silent> vh <C-w>h
 
 "Moving inside split panes
 nnoremap <C-J> <C-W><C-J>
@@ -260,12 +247,20 @@ set rtp+=/usr/local/lib/python3.6/site-packages/powerline/bindings/vim
 set laststatus=2
 set t_Co=256
 
+" Vim-airline (status bar)
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " Omnisharp settings
 " Note: this is required for the plugin to work
 filetype indent plugin on
 
 " Use the stdio OmniSharp-roslyn server
-let g:OmniSharp_server_stdio = 1
+"let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_server_use_mono = 1
 
 " Set the type lookup function to use the preview window instead of echoing it
 "let g:OmniSharp_typeLookupInPreview = 1
@@ -281,7 +276,7 @@ let g:OmniSharp_timeout = 5
 " Fetch full documentation during omnicomplete requests.
 " By default, only Type/Method signatures are fetched. Full documentation can
 " still be fetched when you need it with the :OmniSharpDocumentation command.
-"let g:omnicomplete_fetch_full_documentation = 1
+let g:omnicomplete_fetch_full_documentation = 1
 
 " Set desired preview window height for viewing documentation.
 " You might also want to look at the echodoc plugin.
@@ -317,12 +312,17 @@ augroup omnisharp_commands
     autocmd FileType cs inoremap <buffer> <C-\> <C-o>:OmniSharpSignatureHelp<CR>
 
     " Navigate up and down by method/property/field
-    autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
-    autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
+    "autocmd FileType cs nnoremap <buffer> <C-k> :OmniSharpNavigateUp<CR>
+    "autocmd FileType cs nnoremap <buffer> <C-j> :OmniSharpNavigateDown<CR>
 
     " Find all code errors/warnings for the current solution and populate the quickfix window
     autocmd FileType cs nnoremap <buffer> <Leader>cc :OmniSharpGlobalCodeCheck<CR>
 augroup END
+
+" Contextual code actions (uses fzf, CtrlP or unite.vim when available)
+nnoremap <Leader><Space> :OmniSharpGetCodeActions<CR>
+" Run code actions with text selected in visual mode to extract method
+xnoremap <Leader><Space> :call OmniSharp#GetCodeActions('visual')<CR>
 
 " Rename with dialog
 nnoremap <Leader>nm :OmniSharpRename<CR>
@@ -339,8 +339,8 @@ nnoremap <Leader>sp :OmniSharpStopServer<CR>
 " Enable snippet completion
 let g:OmniSharp_want_snippet=1
 
-" Auto source/reload vimrc on save
 augroup myvimrchooks
   au!
   autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
+
