@@ -344,3 +344,6 @@ augroup myvimrchooks
   au!
   autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
+
+" Remove bell sound for WSL bash on Windows 10
+set visualbell
